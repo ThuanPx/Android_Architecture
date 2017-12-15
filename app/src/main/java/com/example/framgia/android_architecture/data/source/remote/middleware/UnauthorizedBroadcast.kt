@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.support.v4.content.LocalBroadcastManager
+import com.example.framgia.android_architecture.Injection
 
 /**
  * Created by Hyperion on 15/12/2017.
@@ -21,7 +22,8 @@ class UnauthorizedBroadcast(private val mContext: Context,
     private val mBroadcastReceiver by lazy {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent?) {
-               //TODO when unauthorized
+                Injection.provideRepository(context).clearSharedPrefs()
+                //TODO when unauthorized
             }
         }
     }

@@ -3,6 +3,7 @@ package com.example.framgia.android_architecture.data.source.remote.middleware
 import android.content.Context
 import android.content.Intent
 import android.support.v4.content.LocalBroadcastManager
+import com.example.framgia.android_architecture.data.source.Repository
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.net.HttpURLConnection
@@ -13,17 +14,26 @@ import java.net.HttpURLConnection
  * Thank you !
  */
 class AddHeaderInterceptor(val context: Context) : Interceptor {
+    private lateinit var mRepository: Repository
+
+    fun setRepository(repository: Repository) {
+        mRepository = repository
+    }
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val builder = chain.request()
             .newBuilder()
-        //TODO add header here
+            .addHeader(TOKEN, mRepository.accessToken)
         val response  = chain.proceed(builder.build())
         if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
             LocalBroadcastManager.getInstance(context).sendBroadcast(
                 Intent(UnauthorizedBroadcast.INTENT_UNAUTHORIZED))
         }
         return response
+    }
+
+    companion object {
+        private const val TOKEN = "token"
     }
 
 }

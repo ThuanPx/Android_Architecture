@@ -7,4 +7,5 @@ package com.example.framgia.android_architecture
  */
 object Constants {
     const val EXTRA_ARGS = "extra_args"
+    const val CONNECTION_TIMEOUT = 15
 }
