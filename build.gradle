@@ -2,9 +2,13 @@ buildscript {
     apply from: 'versions.gradle'
     addRepos(repositories)
     dependencies {
-        classpath deps.android_gradle_plugin
-        classpath deps.kotlin.plugin
-        classpath deps.google_services
+        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.71"
+    }
+    repositories {
+        mavenCentral()
+        google()
+        jcenter()
     }
 }
 
