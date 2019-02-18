@@ -1,4 +1,4 @@
-package com.example.framgia.architecture.features.userdetail.ui.userdetail
+package com.example.framgia.architecture.features.userdetail
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle

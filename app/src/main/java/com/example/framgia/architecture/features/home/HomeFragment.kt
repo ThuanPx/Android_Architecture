@@ -1,14 +1,15 @@
-package com.example.framgia.architecture.features.main.ui.home
+package com.example.framgia.architecture.features.home
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.framgia.architecture.R
-import com.example.framgia.architecture.features.main.HomeAdapter
-import com.example.framgia.architecture.features.userdetail.UserDetailActivity
+import com.example.framgia.architecture.features.HomeAdapter
+import com.example.framgia.architecture.features.userdetail.UserDetailFragment
 import com.example.framgia.architecture.utils.SafeObserver
 import com.example.framgia.architecture.utils.goTo
 import kotlinx.android.synthetic.main.home_fragment.*
@@ -23,7 +24,7 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModel()
     private val homeAdapter by lazy {
         HomeAdapter {
-            activity?.goTo(UserDetailActivity::class)
+            activity?.goTo(UserDetailFragment.newInstance(), R.id.container)
         }
     }
 
@@ -43,7 +44,9 @@ class HomeFragment : Fragment() {
         viewModel.users.observe(this, SafeObserver {
             homeAdapter.set(it)
         })
-        viewModel.let { }
+        viewModel.onError.observe(this, SafeObserver {
+            Log.i("test", it.getMessageError())
+        })
     }
 
 }

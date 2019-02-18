@@ -1,9 +1,9 @@
-package com.example.framgia.architecture.features.main
+package com.example.framgia.architecture.features
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import com.example.framgia.architecture.R
-import com.example.framgia.architecture.features.main.ui.home.HomeFragment
+import com.example.framgia.architecture.features.home.HomeFragment
 
 class HomeActivity : AppCompatActivity() {
 
@@ -15,6 +15,14 @@ class HomeActivity : AppCompatActivity() {
                 .replace(R.id.container, HomeFragment.newInstance())
                 .commitNow()
         }
+    }
+
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 0)
+            supportFragmentManager.popBackStackImmediate()
+        else
+            super.onBackPressed()
+
     }
 
 }

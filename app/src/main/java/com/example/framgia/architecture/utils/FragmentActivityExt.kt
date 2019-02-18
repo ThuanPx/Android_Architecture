@@ -42,8 +42,9 @@ fun <T : Activity> FragmentActivity.rootTo(cls: KClass<T>, bundle: Bundle? = nul
     startActivity(intent)
 }
 
-fun FragmentActivity.goTo(fragment: Fragment, frameId: Int) =
+fun FragmentActivity.goTo(fragment: Fragment, frameId: Int, addToBackStack: Boolean = true) =
     supportFragmentManager.transact {
+        if (addToBackStack) addToBackStack(fragment.javaClass.simpleName)
         replace(frameId, fragment)
     }
 

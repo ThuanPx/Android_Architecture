@@ -1,7 +1,8 @@
-package com.example.framgia.architecture.features.main.ui.home
+package com.example.framgia.architecture.features.home
 
 import com.example.framgia.architecture.base.BaseViewModel
 import com.example.framgia.architecture.data.model.User
+import com.example.framgia.architecture.data.source.remote.error.RetrofitException
 import com.example.framgia.architecture.data.source.repository.UserRepository
 import com.example.framgia.architecture.utils.rx.SingleLiveData
 import com.example.framgia.architecture.utils.rx.async
@@ -17,7 +18,7 @@ class HomeViewModel(private val userRepository: UserRepository,
         userRepository.searchUser(keyWord)
             .async(schedulerProvider)
             .loading(isLoading)
-            .subscribe({ users.value = it as MutableList<User> }, { onError.value = it })
+            .subscribe({ users.value = it as MutableList<User> }, { onError.value = it as RetrofitException })
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.framgia.architecture.features.main
+package com.example.framgia.architecture.features
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.item_user.view.*
  * Created by ThuanPx on 1/28/19.
  *
  */
-class HomeAdapter(private val itemClickListener: (User) -> Unit) : RecyclerView.Adapter<HomeAdapter.ItemViewHolder>() {
+class HomeAdapter(private val itemClickListener: (User) -> Unit) : RecyclerView.Adapter<HomeAdapter.Companion.ItemViewHolder>() {
     private val users by lazy { mutableListOf<User>() }
 
     fun set(users: List<User>) {
@@ -35,16 +35,17 @@ class HomeAdapter(private val itemClickListener: (User) -> Unit) : RecyclerView.
         p0.onBind(users[p1])
     }
 
-    inner class ItemViewHolder(view: View, private val itemClickListener: (User) -> Unit) : RecyclerView.ViewHolder(view) {
-
-        fun onBind(user: User) {
-            with(itemView) {
-                Glide.with(context)
-                    .load(user.avatarUrl)
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(ivUserImage)
-                tvUserName.text = user.login
-                setOnClickListener { itemClickListener.invoke(user) }
+    companion object {
+        class ItemViewHolder(view: View, private val itemClickListener: (User) -> Unit) : RecyclerView.ViewHolder(view) {
+            fun onBind(user: User) {
+                with(itemView) {
+                    Glide.with(context)
+                        .load(user.avatarUrl)
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(ivUserImage)
+                    tvUserName.text = user.login
+                    setOnClickListener { itemClickListener.invoke(user) }
+                }
             }
         }
     }

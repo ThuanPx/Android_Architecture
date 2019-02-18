@@ -1,7 +1,7 @@
 package com.example.framgia.architecture.di
 
-import com.example.framgia.architecture.features.main.ui.home.HomeViewModel
-import com.example.framgia.architecture.features.userdetail.ui.userdetail.UserDetailViewModel
+import com.example.framgia.architecture.features.home.HomeViewModel
+import com.example.framgia.architecture.features.userdetail.UserDetailViewModel
 import com.example.framgia.architecture.utils.schedulerprovider.SchedulerProvider
 import com.example.framgia.architecture.utils.schedulerprovider.SchedulerProviderImp
 import org.koin.android.viewmodel.ext.koin.viewModel
