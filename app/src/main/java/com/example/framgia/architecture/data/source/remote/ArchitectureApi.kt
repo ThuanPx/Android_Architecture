@@ -13,5 +13,5 @@ import retrofit2.http.Query
  */
 interface ArchitectureApi {
     @GET("/search/users")
-    fun searchUser(@Query("q2") keyword: String): Single<BaseResponse<List<User>>>
+    fun searchUser(@Query("q") keyword: String,@Query("page") page: Int): Single<BaseResponse<List<User>>>
 }

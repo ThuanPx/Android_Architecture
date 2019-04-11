@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.framgia.architecture.R
+import com.example.framgia.architecture.data.source.remote.error.RetrofitException
 
 /**
  * Created by Hyperion on 15/12/2017.
@@ -14,7 +15,7 @@ import com.example.framgia.architecture.R
  * Thank you !
  */
 fun View.showSnackBar(snackBarText: String, timeLength: Int = 3000,
-    actionTextRes: Int? = null, onActionClickListener: View.OnClickListener? = null) =
+                      actionTextRes: Int? = null, onActionClickListener: View.OnClickListener? = null) =
     Snackbar.make(this, snackBarText, timeLength).apply {
         if (actionTextRes != null && onActionClickListener != null) {
             setAction(actionTextRes, onActionClickListener)
@@ -25,8 +26,10 @@ fun View.showSnackBar(snackBarText: String, timeLength: Int = 3000,
     }.show()
 
 fun View.showError(error: Throwable, timeLength: Int = 3000,
-    actionTextRes: Int? = null, onActionClickListener: View.OnClickListener? = null) {
-    showSnackBar(error.message ?: "", timeLength, actionTextRes, onActionClickListener)
+                   actionTextRes: Int? = null, onActionClickListener: View.OnClickListener? = null) {
+    (error as? RetrofitException)?.let {
+        showSnackBar(it.getMessageError(), timeLength, actionTextRes, onActionClickListener)
+    }
 }
 
 fun View.show() {

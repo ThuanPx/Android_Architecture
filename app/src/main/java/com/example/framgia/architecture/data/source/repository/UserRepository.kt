@@ -5,5 +5,5 @@ import io.reactivex.Single
 
 interface UserRepository {
 
-    fun searchUser(keyword: String): Single<List<User>>
+    fun searchUser(keyword: String, page: Int = 1): Single<List<User>>
 }

@@ -3,15 +3,18 @@ package com.example.framgia.architecture.features.home
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.framgia.architecture.R
+import com.example.framgia.architecture.base.EndlessRecyclerViewScrollListener
 import com.example.framgia.architecture.features.HomeAdapter
 import com.example.framgia.architecture.features.userdetail.UserDetailFragment
 import com.example.framgia.architecture.utils.SafeObserver
 import com.example.framgia.architecture.utils.goTo
+import com.example.framgia.architecture.utils.gone
+import com.example.framgia.architecture.utils.showError
 import kotlinx.android.synthetic.main.home_fragment.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -33,19 +36,40 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.home_fragment, container, false)
     }
 
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        etKeyWord.setText("ThuanPx")
 
-        rvMain.layoutManager = LinearLayoutManager(context)
+        val layoutManager = LinearLayoutManager(context)
+        rvMain.layoutManager = layoutManager
         rvMain.adapter = homeAdapter
+
+        rvMain.addOnScrollListener(object : EndlessRecyclerViewScrollListener(layoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+                viewModel.searchUser(etKeyWord.text.toString(), page)
+            }
+
+        })
+
+
         btSearch.setOnClickListener {
             viewModel.searchUser(etKeyWord.text.toString())
         }
-        viewModel.users.observe(this, SafeObserver {
-            homeAdapter.set(it)
+        btDelete.setOnClickListener {
+            homeAdapter.setData(viewModel.users.apply {
+                removeAt(0)
+            })
+        }
+
+        viewModel.usersLiveData.observe(this, SafeObserver {
+            homeAdapter.setData(it)
         })
         viewModel.onError.observe(this, SafeObserver {
-            Log.i("test", it.getMessageError())
+            loading.showError(it)
+        })
+        viewModel.isLoading.observe(this, SafeObserver {
+            loading.gone(!it)
         })
     }
 

@@ -3,7 +3,6 @@ package com.example.framgia.architecture.utils
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
@@ -16,20 +15,26 @@ import kotlin.reflect.KClass
  * Contact me thuanpx1710@gmail.com.
  * Thank you !
  */
-fun <T : Activity> FragmentActivity.goTo(cls: KClass<T>, bundle: Bundle? = null,
-    parcel: Parcelable? = null) {
+
+/**
+ *
+ *  this.goTo(HomeActivity::class) {
+ *  val bundle = Bundle().apply {
+ *  putString("test","ts")
+ *  }
+ *  putExtra("test",bundle)
+ *  }
+ */
+fun <T : Activity> FragmentActivity.goTo(cls: KClass<T>, initBundle: Intent.() -> Unit = {}) {
     intent = Intent(this, cls.java)
-    if (bundle != null) intent.putExtra(EXTRA_ARGS, bundle)
-    if (parcel != null) intent.putExtra(EXTRA_ARGS, bundle)
+    intent.initBundle()
     startActivity(intent)
 }
 
 fun <T : Activity> FragmentActivity.goForResult(cls: KClass<T>, requestCode: Int,
-    bundle: Bundle? = null,
-    parcel: Parcelable? = null) {
+                                                initBundle: Intent.() -> Unit = {}) {
     intent = Intent(this, cls.java)
-    if (bundle != null) intent.putExtra(EXTRA_ARGS, bundle)
-    if (parcel != null) intent.putExtra(EXTRA_ARGS, parcel)
+    intent.initBundle()
     startActivityForResult(intent, requestCode)
 }
 
@@ -52,6 +57,20 @@ fun FragmentActivity.addTo(fragment: Fragment, tag: String) =
     supportFragmentManager.transact {
         add(fragment, tag)
     }
+
+/**
+ * val test = extra<String>("test")
+ * */
+inline fun <reified T : Any> FragmentActivity.extra(key: String, default: T? = null) = lazy {
+    val value = intent?.extras?.get(key)
+    if (value is T) value else default
+}
+
+inline fun <reified T : Any> FragmentActivity.extraNotNull(key: String, default: T? = null) = lazy {
+    val value = intent?.extras?.get(key)
+    requireNotNull(if (value is T) value else default) { key }
+}
+
 
 private inline fun FragmentManager.transact(action: FragmentTransaction.() -> Unit) =
     beginTransaction().apply { action() }.commit()

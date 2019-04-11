@@ -8,8 +8,8 @@ import io.reactivex.Single
 class UserRepositoryImp(private val sharedPrefs: SharedPrefs,
                         private val architectureApi: ArchitectureApi) : UserRepository {
 
-    override fun searchUser(keyword: String): Single<List<User>> {
-        return architectureApi.searchUser(keyword).map { it.data }
+    override fun searchUser(keyword: String, page: Int): Single<List<User>> {
+        return architectureApi.searchUser(keyword, page).map { it.data }
     }
 
 
