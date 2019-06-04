@@ -1,16 +1,18 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-platform-android'
 apply from: '../autodimension.gradle'
 
 android {
-    compileSdkVersion build_versions.target_sdk
-    buildToolsVersion build_versions.build_tools
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "com.example.framgia.android_architecture"
-        minSdkVersion build_versions.min_sdk
-        targetSdkVersion build_versions.target_sdk
+        minSdkVersion 21
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -71,66 +73,32 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     // Support libraries
-    implementation deps.support.app_compat
-    implementation deps.support.v4
-    implementation deps.support.design
-    implementation deps.constraint_layout
+    implementation "androidx.appcompat:appcompat:1.0.2"
+    implementation "androidx.legacy:legacy-support-v4:1.0.0"
+    implementation "com.google.android.material:material:1.1.0-alpha06"
+    implementation "androidx.constraintlayout:constraintlayout:1.1.3"
+    implementation "androidx.constraintlayout:constraintlayout-solver:1.1.3"
 
     // Architecture components
-    implementation deps.lifecycle.runtime
-    implementation deps.lifecycle.extensions
-    kapt deps.lifecycle.compiler
-    implementation deps.room.runtime
+    implementation "androidx.lifecycle:lifecycle-runtime:2.2.0-alpha01"
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0-alpha01"
+    kapt "androidx.lifecycle:lifecycle-compiler:2.2.0-alpha01"
 
     // RxJava
-    implementation deps.rx_android
-    implementation deps.rxjava2
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.4"
 
     // Retrofit
-    implementation deps.retrofit.runtime
-    implementation deps.retrofit.gson
-    implementation deps.retrofit.adapter_rxjava2
-    implementation deps.retrofit.mock
+    implementation "com.squareup.retrofit2:retrofit:2.5.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.5.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.5.0"
 
     // OkHttp
-    implementation deps.okhttp_logging
+    implementation "com.squareup.okhttp3:logging-interceptor:3.12.0"
 
     // Kotlin
-    implementation deps.kotlin.stdlib
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.31"
 
-    // Dependencies for local unit tests
-    testImplementation deps.junit
-    testImplementation deps.mockito.all
-    testImplementation deps.hamcrest
-    testImplementation deps.kotlin.test
-    testImplementation deps.kotlin.stdlib
-
-    // Dependencies for Android unit tests
-    androidTestCompile deps.junit
-    androidTestCompile deps.mockito.core, { exclude group: 'net.bytebuddy' }
-    androidTestCompile deps.dexmaker
-
-    // Espresso UI Testing
-    androidTestCompile deps.espresso.core
-    androidTestCompile deps.espresso.contrib
-    androidTestCompile deps.espresso.intents
-
-    // Resolve conflicts between main and test APK
-    androidTestCompile deps.support.annotations
-    androidTestCompile deps.support.v4
-    androidTestCompile deps.support.app_compat
-    androidTestCompile deps.support.design
-
-    // Support libraries
-    implementation deps.support.app_compat
-    implementation deps.support.v4
-    implementation deps.support.design
-    implementation deps.support.gridlayout
-    implementation deps.constraint_layout
-
-    // Firebase
-    implementation deps.firebase.core
-    implementation deps.firebase.messaging
 }
 
 //TODO add when use google services

@@ -4,10 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.example.framgia.android_architecture.Constants.EXTRA_ARGS
 import kotlin.reflect.KClass
 
@@ -17,7 +17,7 @@ import kotlin.reflect.KClass
  * Thank you !
  */
 fun <T : Activity> FragmentActivity.goTo(cls: KClass<T>, bundle: Bundle? = null,
-    parcel: Parcelable? = null) {
+                                         parcel: Parcelable? = null) {
     intent = Intent(this, cls.java)
     if (bundle != null) intent.putExtra(EXTRA_ARGS, bundle)
     if (parcel != null) intent.putExtra(EXTRA_ARGS, bundle)

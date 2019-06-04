@@ -2,7 +2,7 @@ package com.example.framgia.android_architecture.data.source.remote.middleware
 
 import android.content.Context
 import android.content.Intent
-import android.support.v4.content.LocalBroadcastManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.net.HttpURLConnection

@@ -1,6 +1,6 @@
 package com.example.framgia.android_architecture.utils
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 
 /**
  * Created by Hyperion on 15/12/2017.
