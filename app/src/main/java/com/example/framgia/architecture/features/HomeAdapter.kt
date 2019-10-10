@@ -1,8 +1,8 @@
 package com.example.framgia.architecture.features
 
-import android.support.annotation.NonNull
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.NonNull
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.item_user.view.*
  * Created by ThuanPx on 1/28/19.
  *
  */
-class HomeAdapter(private val itemClickListener: (Int) -> Unit) : RecyclerView.Adapter<HomeAdapter.Companion.ItemViewHolder>(), BaseRecyclerViewAdapter<User> {
+class HomeAdapter(private val itemClickListener: (Int) -> Unit) : androidx.recyclerview.widget.RecyclerView.Adapter<HomeAdapter.Companion.ItemViewHolder>(), BaseRecyclerViewAdapter<User> {
 
     private val users by lazy { mutableListOf<User>() }
 
@@ -51,7 +51,7 @@ class HomeAdapter(private val itemClickListener: (Int) -> Unit) : RecyclerView.A
     }
 
     companion object {
-        class ItemViewHolder(view: View, private val itemClickListener: (Int) -> Unit) : RecyclerView.ViewHolder(view) {
+        class ItemViewHolder(view: View, private val itemClickListener: (Int) -> Unit) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
             fun onBind(user: User, pos: Int) {
                 with(itemView) {
                     Glide.with(context)

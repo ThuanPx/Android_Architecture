@@ -1,7 +1,7 @@
 package com.example.framgia.architecture.features
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.example.framgia.architecture.R
 import com.example.framgia.architecture.features.home.HomeFragment
 
