@@ -1,9 +1,10 @@
 package com.example.framgia.architecture.features.home
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import android.util.Log
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +15,10 @@ import com.example.framgia.architecture.features.userdetail.UserDetailFragment
 import com.example.framgia.architecture.utils.SafeObserver
 import com.example.framgia.architecture.utils.goTo
 import com.example.framgia.architecture.utils.gone
-import com.example.framgia.architecture.utils.showError
 import kotlinx.android.synthetic.main.home_fragment.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class HomeFragment : Fragment() {
+class HomeFragment : androidx.fragment.app.Fragment() {
 
     companion object {
         fun newInstance() = HomeFragment()
@@ -66,7 +66,7 @@ class HomeFragment : Fragment() {
             homeAdapter.setData(it)
         })
         viewModel.onError.observe(this, SafeObserver {
-            loading.showError(it)
+            Log.e("Error", it.localizedMessage)
         })
         viewModel.isLoading.observe(this, SafeObserver {
             loading.gone(!it)

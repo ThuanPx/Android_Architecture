@@ -3,6 +3,8 @@ package com.example.framgia.architecture.data.source.remote
 import com.example.framgia.architecture.data.model.User
 import com.example.framgia.architecture.data.source.remote.response.BaseResponse
 import io.reactivex.Single
+import kotlinx.coroutines.Deferred
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -13,5 +15,5 @@ import retrofit2.http.Query
  */
 interface ArchitectureApi {
     @GET("/search/users")
-    fun searchUser(@Query("q") keyword: String,@Query("page") page: Int): Single<BaseResponse<List<User>>>
+    fun searchUser(@Query("q") keyword: String,@Query("page") page: Int): Deferred<BaseResponse<List<User>>>
 }

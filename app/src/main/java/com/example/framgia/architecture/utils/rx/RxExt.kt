@@ -1,6 +1,6 @@
 package com.example.framgia.architecture.utils.rx
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.framgia.architecture.utils.schedulerprovider.SchedulerProvider
 import io.reactivex.Completable
 import io.reactivex.Single

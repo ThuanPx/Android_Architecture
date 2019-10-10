@@ -3,7 +3,7 @@ buildscript {
     addRepos(repositories)
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.71"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.50"
     }
     repositories {
         mavenCentral()
@@ -18,4 +18,8 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+repositories {
+    google()
 }

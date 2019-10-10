@@ -7,6 +7,7 @@ import com.example.framgia.architecture.data.source.remote.middleware.AddHeaderI
 import com.example.framgia.architecture.data.source.remote.middleware.RxErrorHandlingCallAdapterFactory
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidApplication
@@ -58,6 +59,6 @@ fun provideOkHttpClient(interceptor: AddHeaderInterceptor): OkHttpClient {
 fun provideApi(client: OkHttpClient, gson: Gson): ArchitectureApi =
     Retrofit.Builder().baseUrl(NetworkConstants.END_POINT)
         .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .client(client)
         .build().create(ArchitectureApi::class.java)

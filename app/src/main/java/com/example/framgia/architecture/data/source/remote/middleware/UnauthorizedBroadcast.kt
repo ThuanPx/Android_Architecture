@@ -1,13 +1,13 @@
 package com.example.framgia.architecture.data.source.remote.middleware
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.support.v4.content.LocalBroadcastManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 /**
  * Created by Hyperion on 15/12/2017.
@@ -16,7 +16,7 @@ import android.support.v4.content.LocalBroadcastManager
  */
 class UnauthorizedBroadcast(private val mContext: Context,
     val lifecycle: Lifecycle) : LifecycleObserver {
-    private val localBM by lazy { LocalBroadcastManager.getInstance(mContext) }
+    private val localBM by lazy { androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(mContext) }
 
     private val mBroadcastReceiver by lazy {
         object : BroadcastReceiver() {

@@ -1,10 +1,6 @@
 package com.example.framgia.architecture.base
 
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.StaggeredGridLayoutManager
-
+import androidx.recyclerview.widget.RecyclerView
 
 
 /**
@@ -27,16 +23,16 @@ abstract class EndlessRecyclerViewScrollListener : RecyclerView.OnScrollListener
 
     internal var mLayoutManager: RecyclerView.LayoutManager
 
-    constructor(layoutManager: LinearLayoutManager) {
+    constructor(layoutManager: androidx.recyclerview.widget.LinearLayoutManager) {
         this.mLayoutManager = layoutManager
     }
 
-    constructor(layoutManager: GridLayoutManager) {
+    constructor(layoutManager: androidx.recyclerview.widget.GridLayoutManager) {
         this.mLayoutManager = layoutManager
         visibleThreshold = visibleThreshold * layoutManager.spanCount
     }
 
-    constructor(layoutManager: StaggeredGridLayoutManager) {
+    constructor(layoutManager: androidx.recyclerview.widget.StaggeredGridLayoutManager) {
         this.mLayoutManager = layoutManager
         visibleThreshold = visibleThreshold * layoutManager.spanCount
     }
@@ -60,14 +56,14 @@ abstract class EndlessRecyclerViewScrollListener : RecyclerView.OnScrollListener
         var lastVisibleItemPosition = 0
         val totalItemCount = mLayoutManager.itemCount
 
-        if (mLayoutManager is StaggeredGridLayoutManager) {
-            val lastVisibleItemPositions = (mLayoutManager as StaggeredGridLayoutManager).findLastVisibleItemPositions(null)
+        if (mLayoutManager is androidx.recyclerview.widget.StaggeredGridLayoutManager) {
+            val lastVisibleItemPositions = (mLayoutManager as androidx.recyclerview.widget.StaggeredGridLayoutManager).findLastVisibleItemPositions(null)
             // get maximum element within the list
             lastVisibleItemPosition = getLastVisibleItem(lastVisibleItemPositions)
-        } else if (mLayoutManager is GridLayoutManager) {
-            lastVisibleItemPosition = (mLayoutManager as GridLayoutManager).findLastVisibleItemPosition()
-        } else if (mLayoutManager is LinearLayoutManager) {
-            lastVisibleItemPosition = (mLayoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+        } else if (mLayoutManager is androidx.recyclerview.widget.GridLayoutManager) {
+            lastVisibleItemPosition = (mLayoutManager as androidx.recyclerview.widget.GridLayoutManager).findLastVisibleItemPosition()
+        } else if (mLayoutManager is androidx.recyclerview.widget.LinearLayoutManager) {
+            lastVisibleItemPosition = (mLayoutManager as androidx.recyclerview.widget.LinearLayoutManager).findLastVisibleItemPosition()
         }
 
         // If the total item count is zero and the previous isn't, assume the
