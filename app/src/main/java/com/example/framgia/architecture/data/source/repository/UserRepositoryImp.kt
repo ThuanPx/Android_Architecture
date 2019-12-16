@@ -1,5 +1,6 @@
 package com.example.framgia.architecture.data.source.repository
 
+import android.util.Log
 import com.example.framgia.architecture.base.Result
 import com.example.framgia.architecture.data.model.User
 import com.example.framgia.architecture.data.source.local.SharedPrefs
@@ -20,7 +21,7 @@ class UserRepositoryImp(private val sharedPrefs: SharedPrefs,
 
     override suspend fun searchUser(keyword: String, page: Int): Result<BaseResponse<List<User>>> = withContext(Dispatchers.IO) {
         return@withContext try {
-            Result.Success(architectureApi.searchUser(keyword, page).await())
+            Result.Success(architectureApi.searchUserAsync(keyword, page).await())
         } catch (e: Exception) {
             Result.Error(e)
         }

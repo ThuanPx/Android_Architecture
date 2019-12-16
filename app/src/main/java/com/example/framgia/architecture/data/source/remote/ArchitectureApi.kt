@@ -15,5 +15,5 @@ import retrofit2.http.Query
  */
 interface ArchitectureApi {
     @GET("/search/users")
-    fun searchUser(@Query("q") keyword: String,@Query("page") page: Int): Deferred<BaseResponse<List<User>>>
+    fun searchUserAsync(@Query("q") keyword: String, @Query("page") page: Int): Deferred<BaseResponse<List<User>>>
 }
