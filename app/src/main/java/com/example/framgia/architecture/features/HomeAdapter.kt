@@ -2,14 +2,13 @@ package com.example.framgia.architecture.features
 
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.framgia.architecture.R
-import com.example.framgia.architecture.base.BaseRecyclerViewAdapter
 import com.example.framgia.architecture.data.model.User
 import kotlinx.android.synthetic.main.item_user.view.*
 
@@ -18,11 +17,11 @@ import kotlinx.android.synthetic.main.item_user.view.*
  * Created by ThuanPx on 1/28/19.
  *
  */
-class HomeAdapter(private val itemClickListener: (Int) -> Unit) : androidx.recyclerview.widget.RecyclerView.Adapter<HomeAdapter.Companion.ItemViewHolder>(), BaseRecyclerViewAdapter<User> {
+class HomeAdapter(private val itemClickListener: (Int) -> Unit) : RecyclerView.Adapter<HomeAdapter.Companion.ItemViewHolder>() {
 
     private val users by lazy { mutableListOf<User>() }
 
-    override fun setData(list: List<User>) {
+    fun setData(list: List<User>) {
         val callback = UserDiffUtil(users, list)
         val result = DiffUtil.calculateDiff(callback)
         result.dispatchUpdatesTo(this)
@@ -30,10 +29,7 @@ class HomeAdapter(private val itemClickListener: (Int) -> Unit) : androidx.recyc
         this.users.addAll(list)
     }
 
-    override fun setItem(item: User) {
-    }
-
-    override fun removeItem(pos: Int) {
+    fun removeItem(pos: Int) {
         val temp = users
         temp.removeAt(pos)
         setData(temp)
@@ -51,7 +47,7 @@ class HomeAdapter(private val itemClickListener: (Int) -> Unit) : androidx.recyc
     }
 
     companion object {
-        class ItemViewHolder(view: View, private val itemClickListener: (Int) -> Unit) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+        class ItemViewHolder(view: View, private val itemClickListener: (Int) -> Unit) : RecyclerView.ViewHolder(view) {
             fun onBind(user: User, pos: Int) {
                 with(itemView) {
                     Glide.with(context)

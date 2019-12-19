@@ -1,12 +1,11 @@
 package com.example.framgia.architecture.features.home
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.framgia.architecture.base.BaseViewModel
 import com.example.framgia.architecture.base.Result
 import com.example.framgia.architecture.data.model.User
 import com.example.framgia.architecture.data.source.repository.UserRepository
-import com.example.framgia.architecture.utils.rx.SingleLiveData
+import com.example.framgia.architecture.utils.liveData.SingleLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -31,7 +30,7 @@ class HomeViewModel(private val userRepository: UserRepository) : BaseViewModel(
                         usersLiveData.value = users
                     }
                     is Result.Error -> {
-                        Log.e("Home View Model", result.exception.localizedMessage)
+                        setError(result.exception)
                     }
                 }
             }

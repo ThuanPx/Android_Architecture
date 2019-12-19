@@ -16,7 +16,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
  */
 class UnauthorizedBroadcast(private val mContext: Context,
     val lifecycle: Lifecycle) : LifecycleObserver {
-    private val localBM by lazy { androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(mContext) }
+    private val localBM by lazy { LocalBroadcastManager.getInstance(mContext) }
 
     private val mBroadcastReceiver by lazy {
         object : BroadcastReceiver() {

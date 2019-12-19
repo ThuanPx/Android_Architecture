@@ -2,18 +2,23 @@ buildscript {
     apply from: 'versions.gradle'
     addRepos(repositories)
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.5.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.50"
     }
     repositories {
-        mavenCentral()
         google()
         jcenter()
+        maven { url 'https://jitpack.io' }
+        mavenCentral()
     }
 }
 
 allprojects {
-    addRepos(repositories)
+    repositories {
+        google()
+        jcenter()
+        maven { url "https://jitpack.io" }
+    }
 }
 
 task clean(type: Delete) {

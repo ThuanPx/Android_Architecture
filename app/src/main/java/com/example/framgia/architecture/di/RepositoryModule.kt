@@ -1,11 +1,13 @@
 package com.example.framgia.architecture.di
 
-import android.content.Context
-import com.example.framgia.architecture.data.source.local.SharedPrefs
+import android.app.Application
+import com.example.framgia.architecture.data.source.local.sharedprf.SharedPrefs
+import com.example.framgia.architecture.data.source.local.sharedprf.SharedPrefsImpl
+import com.example.framgia.architecture.data.source.remote.ArchitectureApi
 import com.example.framgia.architecture.data.source.repository.UserRepository
 import com.example.framgia.architecture.data.source.repository.UserRepositoryImp
 import org.koin.android.ext.koin.androidApplication
-import org.koin.dsl.module.module
+import org.koin.dsl.module
 
 /**
  *
@@ -14,9 +16,16 @@ import org.koin.dsl.module.module
  */
 
 val RepositoryModule = module {
-    single { provideSharedPrefs(androidApplication()) }
+    single { provideSharedPrefsApi(androidApplication()) }
 
-    single<UserRepository> { UserRepositoryImp(get(), get()) }
+    single { provideUserRepository(get(), get()) }
 }
 
-fun provideSharedPrefs(context: Context): SharedPrefs = SharedPrefs(context)
+
+fun provideSharedPrefsApi(app: Application): SharedPrefs {
+    return SharedPrefsImpl(app)
+}
+
+fun provideUserRepository(sharedPrefs: SharedPrefs, architectureApi: ArchitectureApi): UserRepository {
+    return UserRepositoryImp(sharedPrefs, architectureApi)
+}

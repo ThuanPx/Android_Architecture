@@ -2,10 +2,9 @@ package com.example.framgia.architecture.di
 
 import com.example.framgia.architecture.features.home.HomeViewModel
 import com.example.framgia.architecture.features.userdetail.UserDetailViewModel
-import com.example.framgia.architecture.utils.schedulerprovider.SchedulerProvider
 import com.example.framgia.architecture.utils.schedulerprovider.SchedulerProviderImp
-import org.koin.android.viewmodel.ext.koin.viewModel
-import org.koin.dsl.module.module
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
 
 /**
  *
@@ -17,9 +16,7 @@ val AppModule = module {
 
     viewModel { HomeViewModel(get()) }
 
-    viewModel { UserDetailViewModel() }
-
-    single<SchedulerProvider>(createOnStart = true) { SchedulerProviderImp() }
+    single { SchedulerProviderImp() }
 }
 
 val rootModule = listOf(AppModule, NetworkModule, RepositoryModule)

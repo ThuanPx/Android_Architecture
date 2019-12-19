@@ -1,20 +1,22 @@
 package com.example.framgia.architecture.features
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.example.framgia.architecture.R
+import com.example.framgia.architecture.base.BaseActivity
 import com.example.framgia.architecture.features.home.HomeFragment
+import com.example.framgia.architecture.features.home.HomeViewModel
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity: BaseActivity<HomeViewModel>(HomeViewModel::class) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.home_activity)
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
+    override val layoutID: Int
+        get() = R.layout.home_activity
+
+    override fun initialize() {
+        supportFragmentManager.beginTransaction()
                 .replace(R.id.container, HomeFragment.newInstance())
                 .commitNow()
-        }
+    }
+
+    override fun onSubscribeObserver() {
     }
 
     override fun onBackPressed() {

@@ -19,8 +19,8 @@ class AddHeaderInterceptor(val context: Context) : Interceptor {
             .newBuilder()
         //TODO add header here
         val response  = chain.proceed(builder.build())
-        if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-            androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(context).sendBroadcast(
+        if (response.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            LocalBroadcastManager.getInstance(context).sendBroadcast(
                 Intent(UnauthorizedBroadcast.INTENT_UNAUTHORIZED))
         }
         return response

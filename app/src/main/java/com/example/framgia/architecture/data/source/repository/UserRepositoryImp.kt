@@ -1,9 +1,9 @@
 package com.example.framgia.architecture.data.source.repository
 
-import android.util.Log
 import com.example.framgia.architecture.base.Result
 import com.example.framgia.architecture.data.model.User
-import com.example.framgia.architecture.data.source.local.SharedPrefs
+import com.example.framgia.architecture.data.source.local.sharedprf.SharedPrefs
+import com.example.framgia.architecture.data.source.local.sharedprf.SharedPrefsImpl
 import com.example.framgia.architecture.data.source.remote.ArchitectureApi
 import com.example.framgia.architecture.data.source.remote.response.BaseResponse
 import kotlinx.coroutines.Dispatchers
