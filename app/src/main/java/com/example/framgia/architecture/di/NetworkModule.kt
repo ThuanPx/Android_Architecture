@@ -58,6 +58,5 @@ fun provideOkHttpClient(interceptor: AddHeaderInterceptor): OkHttpClient {
 fun provideApi(client: OkHttpClient, gson: Gson): ArchitectureApi =
     Retrofit.Builder().baseUrl(NetworkConstants.END_POINT)
         .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .client(client)
         .build().create(ArchitectureApi::class.java)

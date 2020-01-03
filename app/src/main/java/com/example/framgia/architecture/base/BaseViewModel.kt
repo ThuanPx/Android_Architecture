@@ -1,7 +1,7 @@
 package com.example.framgia.architecture.base
 
 import androidx.lifecycle.ViewModel
-import com.example.framgia.architecture.utils.liveData.SingleLiveData
+import com.example.framgia.architecture.utils.liveData.SingleLiveEvent
 
 /**
  *
@@ -10,8 +10,8 @@ import com.example.framgia.architecture.utils.liveData.SingleLiveData
  */
 abstract class BaseViewModel : ViewModel() {
 
-    val isLoading = SingleLiveData<Boolean>()
-    val onError = SingleLiveData<Throwable>()
+    val isLoading = SingleLiveEvent<Boolean>()
+    val onError = SingleLiveEvent<Throwable>()
 
     fun showLoading(isShow: Boolean = true) {
         isLoading.value = isShow

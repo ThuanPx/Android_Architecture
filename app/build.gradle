@@ -136,8 +136,8 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:2.2.12"
 
     // Retrofit
-    implementation "com.squareup.retrofit2:retrofit:2.6.1"
-    implementation "com.squareup.retrofit2:converter-gson:2.6.1"
+    implementation "com.squareup.retrofit2:retrofit:2.7.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.7.0"
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2"
 
     // OkHttp

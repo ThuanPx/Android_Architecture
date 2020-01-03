@@ -21,7 +21,7 @@ class UserRepositoryImp(private val sharedPrefs: SharedPrefs,
 
     override suspend fun searchUser(keyword: String, page: Int): Result<BaseResponse<List<User>>> = withContext(Dispatchers.IO) {
         return@withContext try {
-            Result.Success(architectureApi.searchUserAsync(keyword, page).await())
+            Result.Success(architectureApi.searchUserAsync(keyword, page))
         } catch (e: Exception) {
             Result.Error(e)
         }

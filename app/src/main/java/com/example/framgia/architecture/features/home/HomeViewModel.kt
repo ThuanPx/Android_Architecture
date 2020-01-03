@@ -5,14 +5,14 @@ import com.example.framgia.architecture.base.BaseViewModel
 import com.example.framgia.architecture.base.Result
 import com.example.framgia.architecture.data.model.User
 import com.example.framgia.architecture.data.source.repository.UserRepository
-import com.example.framgia.architecture.utils.liveData.SingleLiveData
+import com.example.framgia.architecture.utils.liveData.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HomeViewModel(private val userRepository: UserRepository) : BaseViewModel() {
 
-    val usersLiveData by lazy { SingleLiveData<List<User>>() }
+    val usersLiveData by lazy { SingleLiveEvent<List<User>>() }
     val users by lazy { mutableListOf<User>() }
 
     fun searchUser(keyWord: String, page: Int = 1) {
