@@ -1,13 +1,11 @@
 package com.example.framgia.architecture.features.home
 
-import androidx.lifecycle.viewModelScope
 import com.example.framgia.architecture.base.BaseViewModel
 import com.example.framgia.architecture.base.Result
 import com.example.framgia.architecture.data.model.User
 import com.example.framgia.architecture.data.source.repository.UserRepository
 import com.example.framgia.architecture.utils.liveData.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HomeViewModel(private val userRepository: UserRepository) : BaseViewModel() {
@@ -16,8 +14,7 @@ class HomeViewModel(private val userRepository: UserRepository) : BaseViewModel(
     val users by lazy { mutableListOf<User>() }
 
     fun searchUser(keyWord: String, page: Int = 1) {
-        viewModelScope.launch {
-            showLoading()
+        launchDataLoad {
             userRepository.searchUser(keyWord, page).let { result ->
                 showLoading(false)
                 when(result) {
@@ -30,7 +27,7 @@ class HomeViewModel(private val userRepository: UserRepository) : BaseViewModel(
                         usersLiveData.value = users
                     }
                     is Result.Error -> {
-                        setError(result.exception)
+                        setError(result.throwable)
                     }
                 }
             }

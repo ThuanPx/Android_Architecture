@@ -1,7 +1,10 @@
 package com.example.framgia.architecture.base
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.framgia.architecture.utils.liveData.SingleLiveEvent
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 /**
  *
@@ -17,7 +20,18 @@ abstract class BaseViewModel : ViewModel() {
         isLoading.value = isShow
     }
 
-    fun setError(error: Throwable) {
+    fun setError(error: Throwable?) {
         onError.value = error
+    }
+
+    fun launchDataLoad(block: suspend () -> Unit): Job {
+        return viewModelScope.launch {
+            try {
+                isLoading.value = true
+                block()
+            } finally {
+                isLoading.value = false
+            }
+        }
     }
 }
