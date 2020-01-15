@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.framgia.architecture.R
 import com.example.framgia.architecture.base.BaseFragment
 import com.example.framgia.architecture.base.recyclerView.EndlessRecyclerOnScrollListener
-import com.example.framgia.architecture.features.HomeAdapter
 import com.example.framgia.architecture.features.userdetail.UserDetailFragment
 import com.example.framgia.architecture.utils.extension.replaceFragmentInActivity
 import kotlinx.android.synthetic.main.home_fragment.*
@@ -44,15 +43,16 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class) {
             viewModel.searchUser(etKeyWord.text.toString())
         }
         btDelete.setOnClickListener {
-            homeAdapter.setData(viewModel.users.apply {
-                removeAt(0)
-            })
+            if (viewModel.users.size > 0)
+                homeAdapter.submitData(viewModel.users.apply {
+                    removeAt(0)
+                })
         }
     }
 
     override fun onSubscribeObserver() {
         viewModel.usersLiveData.observe(this, Observer {
-            homeAdapter.setData(it)
+            homeAdapter.submitData(it.toMutableList())
         })
         viewModel.onError.observe(this, Observer {
             handleApiError(it)

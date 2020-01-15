@@ -12,8 +12,8 @@ import com.example.framgia.architecture.utils.extension.show
 import kotlinx.android.synthetic.main.item_load_more.view.*
 
 @Suppress("UNCHECKED_CAST")
-abstract class BaseLoadMoreAdapter<T>(context: Context) :
-    BaseRecyclerViewAdapter<T, RecyclerView.ViewHolder>(context) {
+abstract class BaseLoadMoreAdapter<T>() :
+    BaseRecyclerViewAdapter<T, RecyclerView.ViewHolder>() {
 
     companion object {
         const val TYPE_PROGRESS = 0xFFFF

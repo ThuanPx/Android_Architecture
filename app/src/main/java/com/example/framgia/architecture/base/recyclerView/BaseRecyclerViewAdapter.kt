@@ -16,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 
 abstract class BaseRecyclerViewAdapter<T, V : RecyclerView.ViewHolder>
 constructor(
-        protected val context: Context,
-        protected var layoutInflater: LayoutInflater = LayoutInflater.from(context),
         protected var dataList: MutableList<T> = mutableListOf()
 ) : RecyclerView.Adapter<V>() {
 
@@ -33,12 +31,23 @@ constructor(
         return dataList
     }
 
+    fun updateData(newData: MutableList<T>?, diffUtilCallback: DiffUtil.Callback) {
+        handler.post {
+            newData?.let {
+                val diffResult = DiffUtil.calculateDiff(diffUtilCallback)
+                dataList.clear()
+                dataList.addAll(it)
+                diffResult.dispatchUpdatesTo(this)
+            }
+        }
+    }
+
     fun updateData(newData: MutableList<T>?, diffResult: DiffUtil.DiffResult) {
         handler.post {
             newData?.let {
-                diffResult.dispatchUpdatesTo(this)
                 dataList.clear()
                 dataList.addAll(it)
+                diffResult.dispatchUpdatesTo(this)
             }
         }
     }
