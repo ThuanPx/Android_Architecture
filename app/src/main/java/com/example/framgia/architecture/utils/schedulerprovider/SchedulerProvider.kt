@@ -1,6 +1,6 @@
 package com.example.framgia.architecture.utils.schedulerprovider
 
-import io.reactivex.Scheduler
+import io.reactivex.rxjava3.core.Scheduler
 
 /**
  *

@@ -7,5 +7,7 @@ import com.google.gson.annotations.SerializedName
  * Contact me thuanpx1710@gmail.com.
  * Thank you !
  */
-class BaseResponse<T>(@SerializedName("total_count") val totalCount: Int,
-                      @SerializedName("items") val data: T)
+class BaseResponse<T>(
+    @SerializedName("total_count") val totalCount: Int,
+    @SerializedName("items") val data: T
+)

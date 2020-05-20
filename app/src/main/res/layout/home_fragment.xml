@@ -4,8 +4,7 @@
     android:id="@+id/homeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.example.framgia.architecture.features.main.MainActivity">
+    android:orientation="vertical">
 
     <EditText
         android:id="@+id/etKeyWord"
@@ -25,13 +24,6 @@
             android:layout_gravity="center"
             android:text="Search" />
 
-        <Button
-            android:id="@+id/btDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Delete Local" />
-
     </LinearLayout>
 
     <ProgressBar
@@ -40,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

@@ -1,8 +1,17 @@
 package com.example.framgia.architecture
 
 import android.app.Application
-import com.example.framgia.architecture.di.rootModule
-import org.koin.android.ext.android.startKoin
+import com.example.framgia.architecture.di.appModule
+import com.example.framgia.architecture.di.networkModule
+import com.example.framgia.architecture.di.repositoryModule
+import com.example.framgia.architecture.di.viewModelModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidFileProperties
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.loadKoinModules
+import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
+import timber.log.Timber
 
 /**
  * Created by Hyperion on 15/12/2017.
@@ -13,6 +22,20 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        startKoin(this, rootModule)
+        configKoin()
+        configTimber()
+    }
+
+    private fun configKoin() {
+        startKoin {
+            androidContext(this@App)
+            modules(listOf(appModule, networkModule, repositoryModule, viewModelModule))
+        }
+    }
+
+    private fun configTimber() {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
     }
 }

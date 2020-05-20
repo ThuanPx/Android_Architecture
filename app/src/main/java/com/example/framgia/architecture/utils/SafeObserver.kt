@@ -1,6 +1,6 @@
 package com.example.framgia.architecture.utils
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 
 /**
  * Created by Hyperion on 15/12/2017.
