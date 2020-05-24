@@ -1,63 +1,86 @@
 package com.example.framgia.architecture.di
 
-import android.content.Context
+import android.app.Application
 import com.example.framgia.architecture.BuildConfig
 import com.example.framgia.architecture.data.source.remote.ArchitectureApi
-import com.example.framgia.architecture.data.source.remote.middleware.AddHeaderInterceptor
+import com.example.framgia.architecture.data.source.remote.middleware.InterceptorImpl
 import com.example.framgia.architecture.data.source.remote.middleware.RxErrorHandlingCallAdapterFactory
+import com.example.framgia.architecture.data.source.repository.TokenRepository
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
+import okhttp3.Cache
+import okhttp3.Interceptor
+import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.android.ext.koin.androidApplication
-import org.koin.dsl.module.module
+import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 /**
- *
- * Created by ThuanPx on 1/25/19.
- *
+ * --------------------
+ * Created by ThuanPx on 6/17/2019.
+ * Screen name:
+ * --------------------
  */
-val NetworkModule = module {
 
-    single { provideGson() }
-
-    single { provideAddHeaderInterceptor(androidApplication()) }
-
-    single { provideOkHttpClient(get()) }
-
-    single { provideApi(get(), get()) }
-
+val networkModule = module(createdAtStart = true) {
+    single { provideOkHttpCache(get()) }
+    single { provideInterceptor(get()) }
+    single { provideOkHttpClient(get(), get()) }
+    single { provideRetrofit(get(), get()) }
+    single { provideApi(get()) }
 }
 
-object NetworkConstants {
-    internal const val END_POINT = "https://api.github.com/"
-    internal const val CONNECTION_TIMEOUT = 15
+fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
+    return Retrofit.Builder()
+        .baseUrl(BuildConfig.BASE_URL)
+        .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+        .client(okHttpClient)
+        .build()
 }
 
-fun provideGson(): Gson = GsonBuilder().create()
+fun provideOkHttpCache(app: Application): Cache {
+    val cacheSize: Long = 10 * 1024 * 1024 // 10 MiB
+    return Cache(app.cacheDir, cacheSize)
+}
 
-fun provideAddHeaderInterceptor(context: Context) = AddHeaderInterceptor(context)
+fun provideInterceptor(tokenRepository: TokenRepository): Interceptor {
+    return InterceptorImpl(tokenRepository)
+}
 
-fun provideOkHttpClient(interceptor: AddHeaderInterceptor): OkHttpClient {
+fun provideOkHttpClient(cache: Cache, interceptor: Interceptor): OkHttpClient {
     val httpClientBuilder = OkHttpClient.Builder()
-        .readTimeout(NetworkConstants.CONNECTION_TIMEOUT.toLong(), TimeUnit.SECONDS)
-        .connectTimeout(NetworkConstants.CONNECTION_TIMEOUT.toLong(), TimeUnit.SECONDS)
-        .addInterceptor(interceptor)
+    httpClientBuilder.cache(cache)
+    httpClientBuilder.addInterceptor(interceptor)
+
+    httpClientBuilder.readTimeout(
+        NetworkConstants.READ_TIMEOUT, TimeUnit.SECONDS
+    )
+    httpClientBuilder.writeTimeout(
+        NetworkConstants.WRITE_TIMEOUT, TimeUnit.SECONDS
+    )
+    httpClientBuilder.connectTimeout(
+        NetworkConstants.CONNECTION_TIMEOUT, TimeUnit.SECONDS
+    )
+
     if (BuildConfig.DEBUG) {
         val logging = HttpLoggingInterceptor()
         httpClientBuilder.addInterceptor(logging)
         logging.level = HttpLoggingInterceptor.Level.BODY
     }
+
     return httpClientBuilder.build()
 }
 
+fun provideApi(retrofit: Retrofit): ArchitectureApi {
+    return retrofit.create(ArchitectureApi::class.java)
+}
 
-fun provideApi(client: OkHttpClient, gson: Gson): ArchitectureApi =
-    Retrofit.Builder().baseUrl(NetworkConstants.END_POINT)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
-        .client(client)
-        .build().create(ArchitectureApi::class.java)
+object NetworkConstants {
+    const val READ_TIMEOUT: Long = 30
+    const val WRITE_TIMEOUT: Long = 30
+    const val CONNECTION_TIMEOUT: Long = 30
+}

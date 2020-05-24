@@ -1,56 +1,108 @@
 package com.example.framgia.architecture.data.source.remote.middleware
 
-import android.text.TextUtils
+import androidx.annotation.NonNull
 import com.example.framgia.architecture.data.source.remote.error.ErrorResponse
 import com.example.framgia.architecture.data.source.remote.error.RetrofitException
-import com.google.gson.Gson
-import io.reactivex.Completable
-import io.reactivex.Maybe
-import io.reactivex.Observable
-import io.reactivex.Single
+import com.google.gson.JsonSyntaxException
+import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
+import java.io.IOException
+import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.HttpException
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import java.io.IOException
-import java.lang.reflect.Type
+import timber.log.Timber
 
 /**
- * Created by Hyperion on 15/12/2017.
- * Contact me thuanpx1710@gmail.com.
- * Thank you !
+ * ErrorHandling:
+ * http://bytes.babbel.com/en/articles/2016-03-16-retrofit2-rxjava-error-handling.html
+ * This class only for Call in retrofit 2
  */
-class RxErrorHandlingCallAdapterFactory private constructor() : CallAdapter.Factory() {
-    private val mInstance: RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.create()
 
-    @Suppress("UNCHECKED_CAST")
-    override fun get(returnType: Type, annotations: Array<Annotation>,
-                     retrofit: Retrofit): CallAdapter<*, *> {
+@Suppress("UNCHECKED_CAST")
+class RxErrorHandlingCallAdapterFactory private constructor() : CallAdapter.Factory() {
+
+    private val original: RxJava3CallAdapterFactory = RxJava3CallAdapterFactory.create()
+
+    override fun get(
+        returnType: Type,
+        annotations: Array<Annotation>,
+        retrofit: Retrofit
+    ): CallAdapter<*, *> {
         return RxCallAdapterWrapper(
-            mInstance.get(returnType, annotations, retrofit) as CallAdapter<Any, Any>)
+                returnType,
+                wrapped = original.get(returnType, annotations, retrofit) as CallAdapter<Any, Any>
+        )
     }
 
-    private class RxCallAdapterWrapper(
-        private val wrapped: CallAdapter<Any, Any>) : CallAdapter<Any, Any> {
+    /**
+     * RxCallAdapterWrapper
+     */
+    internal inner class RxCallAdapterWrapper<R>(
+        private val returnType: Type,
+        private val wrapped: CallAdapter<R, Any>
+    ) : CallAdapter<R, Any> {
+
         override fun responseType(): Type {
             return wrapped.responseType()
         }
 
-        override fun adapt(call: Call<Any>): Any {
-            val result = wrapped.adapt(call)
-            return when (result) {
-                is Single<*> -> result.onErrorResumeNext { throwable -> Single.error(convertToBaseException(throwable)) }
-                is Observable<*> -> result.onErrorResumeNext { throwable: Throwable ->
-                    Observable.error(convertToBaseException(throwable))
+        override fun adapt(@NonNull call: Call<R>): Any {
+            val rawType = getRawType(returnType)
+
+            val isFlowable = rawType == Flowable::class.java
+            val isSingle = rawType == Single::class.java
+            val isMaybe = rawType == Maybe::class.java
+            val isCompletable = rawType == Completable::class.java
+
+            if (returnType !is ParameterizedType) {
+                val name = when {
+                    isFlowable -> "Flowable"
+                    isSingle -> "Single"
+                    isMaybe -> "Maybe"
+                    else -> "Observable"
                 }
-                is Completable -> result.onErrorResumeNext { throwable ->
-                    Completable.error(convertToBaseException(throwable))
+                throw IllegalStateException(
+                        name +
+                                " return type must be parameterized" +
+                                " as " +
+                                name +
+                                "<Foo> or " +
+                                name +
+                                "<? extends Foo>"
+                )
+            }
+
+            if (isFlowable) {
+                return (wrapped.adapt(
+                        call) as Flowable<*>).onErrorResumeNext { throwable: Throwable ->
+                    Flowable.error(convertToBaseException(throwable))
                 }
-                is Maybe<*> -> result.onErrorResumeNext { throwable: Throwable ->
+            }
+            if (isSingle) {
+                return (wrapped.adapt(call) as Single<*>).onErrorResumeNext { throwable ->
+                    Single.error(convertToBaseException(throwable))
+                }
+            }
+            if (isMaybe) {
+                return (wrapped.adapt(call) as Maybe<*>).onErrorResumeNext { throwable: Throwable ->
                     Maybe.error(convertToBaseException(throwable))
                 }
-                else -> result
+            }
+            if (isCompletable) {
+                return (wrapped.adapt(call) as Completable).onErrorResumeNext { throwable ->
+                    Completable.error(convertToBaseException(throwable))
+                }
+            }
+            return (wrapped.adapt(
+                    call) as Observable<*>).onErrorResumeNext { throwable: Throwable ->
+                Observable.error(convertToBaseException(throwable))
             }
         }
 
@@ -67,31 +119,31 @@ class RxErrorHandlingCallAdapterFactory private constructor() : CallAdapter.Fact
             // We had non-200 http error
             if (throwable is HttpException) {
                 val response = throwable.response()
-                if (response.errorBody() != null) {
-                    return try {
-                        val errorResponse = Gson().fromJson(response.errorBody()?.string(),
-                            ErrorResponse::class.java)
-
-                        if (errorResponse != null && !TextUtils.isEmpty(errorResponse.message)) {
+                val errorResponse = ErrorResponse(throwable.response())
+                return if (response?.errorBody() != null) {
+                    try {
+                        if (errorResponse.message?.isNotBlank() == true) {
                             RetrofitException.toServerError(errorResponse)
                         } else {
-                            RetrofitException.toHttpError(response)
+                            RetrofitException.toHttpError(errorResponse)
                         }
-
-                    } catch (e: IOException) {
-                        RetrofitException.toUnexpectedError(throwable)
+                    } catch (e: JsonSyntaxException) {
+                        Timber.e(TAG, e.message)
+                        RetrofitException.toUnexpectedError(e)
                     }
                 } else {
-                    return RetrofitException.toHttpError(response)
+                    RetrofitException.toHttpError(errorResponse)
                 }
             }
-
             // We don't know what happened. We need to simply convert to an unknown error
             return RetrofitException.toUnexpectedError(throwable)
         }
     }
 
     companion object {
+
+        private val TAG = RxErrorHandlingCallAdapterFactory::class.java.name
+
         fun create(): CallAdapter.Factory {
             return RxErrorHandlingCallAdapterFactory()
         }

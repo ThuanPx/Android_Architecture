@@ -1,29 +1,27 @@
 package com.example.framgia.architecture.base
 
-import android.arch.lifecycle.ViewModel
-import android.support.annotation.CallSuper
-import com.example.framgia.architecture.utils.rx.SingleLiveData
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
+import androidx.annotation.CallSuper
+import androidx.lifecycle.ViewModel
+import com.example.framgia.architecture.utils.SingleLiveData
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
 
 /**
- *
  * Created by ThuanPx on 1/25/19.
- *
  */
 abstract class BaseViewModel : ViewModel() {
 
-    private var disposable = CompositeDisposable()
+    private var compositeDisposable = CompositeDisposable()
     val isLoading = SingleLiveData<Boolean>()
     val onError = SingleLiveData<Throwable>()
 
-    protected fun rx(block: () -> Disposable?) {
-        block()?.let { disposable.add(it) }
+    protected fun Disposable.addToDisposable() {
+        compositeDisposable.add(this)
     }
 
     @CallSuper
     override fun onCleared() {
         super.onCleared()
-        disposable.clear()
+        compositeDisposable.clear()
     }
 }

@@ -1,76 +1,57 @@
 package com.example.framgia.architecture.features.home
 
-import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.framgia.architecture.R
-import com.example.framgia.architecture.base.EndlessRecyclerViewScrollListener
-import com.example.framgia.architecture.features.HomeAdapter
+import com.example.framgia.architecture.base.BaseFragment
 import com.example.framgia.architecture.features.userdetail.UserDetailFragment
-import com.example.framgia.architecture.utils.SafeObserver
-import com.example.framgia.architecture.utils.goTo
-import com.example.framgia.architecture.utils.gone
-import com.example.framgia.architecture.utils.showError
+import com.example.framgia.architecture.utils.ktext.context.replaceFragmentToActivity
+import com.example.framgia.architecture.utils.ktext.view.gone
 import kotlinx.android.synthetic.main.home_fragment.*
-import org.koin.android.viewmodel.ext.android.viewModel
 
-class HomeFragment : Fragment() {
+class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class) {
 
     companion object {
         fun newInstance() = HomeFragment()
     }
 
-    private val viewModel: HomeViewModel by viewModel()
-    private val homeAdapter by lazy {
-        HomeAdapter {
-            activity?.goTo(UserDetailFragment.newInstance(), R.id.container)
-        }
-    }
+    override val layoutID: Int
+        get() = R.layout.home_fragment
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.home_fragment, container, false)
-    }
+    private var homeAdapter: HomeAdapter? = null
 
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun initialize() {
         etKeyWord.setText("ThuanPx")
 
-        val layoutManager = LinearLayoutManager(context)
-        rvMain.layoutManager = layoutManager
-        rvMain.adapter = homeAdapter
+        homeAdapter = HomeAdapter()
+        homeAdapter?.setOnItemClickListener { user, position ->
+            activity?.replaceFragmentToActivity(R.id.container, UserDetailFragment.newInstance())
+        }
 
-        rvMain.addOnScrollListener(object : EndlessRecyclerViewScrollListener(layoutManager) {
-            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
-                viewModel.searchUser(etKeyWord.text.toString(), page)
-            }
-
-        })
-
+        rvMain.apply {
+            layoutManager = LinearLayoutManager(context)
+            rvMain.adapter = homeAdapter
+        }
 
         btSearch.setOnClickListener {
             viewModel.searchUser(etKeyWord.text.toString())
         }
-        btDelete.setOnClickListener {
-            homeAdapter.setData(viewModel.users.apply {
-                removeAt(0)
-            })
-        }
+    }
 
-        viewModel.usersLiveData.observe(this, SafeObserver {
-            homeAdapter.setData(it)
+    override fun onDestroy() {
+        super.onDestroy()
+        homeAdapter?.unRegisterItemClickListener()
+    }
+
+    override fun onSubscribeObserver() {
+        viewModel.users.observe(this, Observer {
+            homeAdapter?.submitData(it.toMutableList())
         })
-        viewModel.onError.observe(this, SafeObserver {
-            loading.showError(it)
+        viewModel.onError.observe(this, Observer {
+            handleApiError(it)
         })
-        viewModel.isLoading.observe(this, SafeObserver {
+        viewModel.isLoading.observe(this, Observer {
             loading.gone(!it)
         })
     }
-
 }
