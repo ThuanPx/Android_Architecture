@@ -106,4 +106,3 @@ inline fun <reified T : Any> FragmentActivity.extra(key: String, default: T? = n
 fun FragmentActivity.getCurrentFragment(@IdRes containerId: Int): Fragment? {
     return supportFragmentManager.findFragmentById(containerId)
 }
-

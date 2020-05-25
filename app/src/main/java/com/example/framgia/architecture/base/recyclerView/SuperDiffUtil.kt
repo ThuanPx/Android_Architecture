@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.DiffUtil
  * Created by ThuanPx
  */
 
-open class SuperDiffUtil<T>(var oldList: List<T> = mutableListOf(),
-                            var newList: List<T> = mutableListOf()) : DiffUtil.Callback() {
+open class SuperDiffUtil<T>(
+    var oldList: List<T> = mutableListOf(),
+    var newList: List<T> = mutableListOf()
+) : DiffUtil.Callback() {
 
     private var areContentsTheSame: ((T, T) -> Boolean)? = null
     private var areItemsTheSame: ((T, T) -> Boolean)? = null

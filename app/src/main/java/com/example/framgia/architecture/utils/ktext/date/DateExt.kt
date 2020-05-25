@@ -23,7 +23,7 @@ fun String.convertUiFormatToDataFormat(
     val newSdf = SimpleDateFormat(outputFormat, locale)
     newSdf.timeZone = gmtTime
     return try {
-        newSdf.format(sdf.parse(this)?: Date())
+        newSdf.format(sdf.parse(this) ?: Date())
     } catch (e: ParseException) {
         null
     }
@@ -42,7 +42,7 @@ fun String.convertToUTC(
     val newSdf = SimpleDateFormat(outputFormat, locale)
     newSdf.timeZone = gmtTime
     return try {
-        newSdf.format(sdf.parse(this)?: Date())
+        newSdf.format(sdf.parse(this) ?: Date())
     } catch (e: ParseException) {
         null
     }
@@ -104,7 +104,7 @@ fun String.convertStringToDate(
 ): Date {
     val parser = SimpleDateFormat(outputFormat, locale)
     return try {
-        parser.parse(this)?: Date()
+        parser.parse(this) ?: Date()
     } catch (e: ParseException) {
         Date()
     }

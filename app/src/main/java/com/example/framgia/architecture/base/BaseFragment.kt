@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.framgia.architecture.utils.widget.dialogManager.DialogAlert
 import com.example.framgia.architecture.utils.widget.dialogManager.DialogConfirm
+import com.example.framgia.architecture.utils.widget.dialogManager.DialogManager
 import com.example.framgia.architecture.utils.widget.dialogManager.DialogManagerImpl
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlin.reflect.KClass
-import mi.omiseno.smartphoneorder.utils.widget.dialogManager.DialogManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 abstract class BaseFragment<VM : BaseViewModel>(clazz: KClass<VM>) : Fragment(), BaseView {
@@ -88,5 +88,4 @@ abstract class BaseFragment<VM : BaseViewModel>(clazz: KClass<VM>) : Fragment(),
     protected fun Disposable.addToDisposable() {
         compositeDisposable.add(this)
     }
-
 }

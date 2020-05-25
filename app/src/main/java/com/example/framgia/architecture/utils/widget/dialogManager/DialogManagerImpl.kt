@@ -2,7 +2,6 @@ package com.example.framgia.architecture.utils.widget.dialogManager
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import mi.omiseno.smartphoneorder.utils.widget.dialogManager.DialogManager
 import java.lang.ref.WeakReference
 
 class DialogManagerImpl(ctx: Context?) : DialogManager {
@@ -39,7 +38,7 @@ class DialogManagerImpl(ctx: Context?) : DialogManager {
         listener: DialogAlert.Companion.OnButtonClickedListener?
     ) {
         val dialog = DialogAlert.newInstance(
-                title, message, titleButton, listener
+            title, message, titleButton, listener
         )
         val fm = (context?.get() as AppCompatActivity).supportFragmentManager
         dialog.show(fm, DialogAlert::class.java.simpleName)
@@ -54,7 +53,7 @@ class DialogManagerImpl(ctx: Context?) : DialogManager {
         listener: DialogAlert.Companion.OnButtonClickedListener?
     ) {
         val dialog = DialogAlert.newInstance(
-                title, message, titleButton, listener
+            title, message, titleButton, listener
         )
         val fm = (context?.get() as AppCompatActivity).supportFragmentManager
         dialog.show(fm, DialogAlert::class.java.simpleName)
@@ -69,8 +68,8 @@ class DialogManagerImpl(ctx: Context?) : DialogManager {
         listener: DialogConfirm.OnButtonClickedListener?
     ) {
         val dialog = DialogConfirm.newInstance(
-                title, message, titleButtonPositive,
-                titleButtonNegative, listener
+            title, message, titleButtonPositive,
+            titleButtonNegative, listener
         )
         val fm = (context?.get() as AppCompatActivity).supportFragmentManager
         dialog.show(fm, DialogAlert::class.java.simpleName)

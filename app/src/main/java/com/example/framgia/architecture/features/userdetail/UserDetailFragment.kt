@@ -9,9 +9,11 @@ class UserDetailFragment : BaseFragment<HomeViewModel>(HomeViewModel::class) {
         get() = R.layout.user_detail_fragment
 
     override fun initialize() {
+        // TODO init
     }
 
     override fun onSubscribeObserver() {
+        // TODO subscribe live data
     }
 
     companion object {

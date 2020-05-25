@@ -15,6 +15,7 @@ class MainActivity : BaseActivity<MainViewModel>(MainViewModel::class) {
     }
 
     override fun onSubscribeObserver() {
+        // TODO subscribe live data
     }
 
     override fun onBackPressed() {

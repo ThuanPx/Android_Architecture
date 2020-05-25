@@ -1,7 +1,4 @@
-package mi.omiseno.smartphoneorder.utils.widget.dialogManager
-
-import com.example.framgia.architecture.utils.widget.dialogManager.DialogAlert
-import com.example.framgia.architecture.utils.widget.dialogManager.DialogConfirm
+package com.example.framgia.architecture.utils.widget.dialogManager
 
 interface DialogManager {
 
