@@ -22,7 +22,7 @@ import org.koin.dsl.module
 
 val appModule = module(createdAtStart = true) {
     single { provideResources(get()) }
-    single { provideSharedPrefs(get())}
+    single { provideSharedPrefs(get()) }
     single { provideSchedulerProvider() }
     single { provideGson() }
 }

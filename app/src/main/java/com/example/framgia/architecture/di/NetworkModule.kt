@@ -8,9 +8,9 @@ import com.example.framgia.architecture.data.source.remote.middleware.RxErrorHan
 import com.example.framgia.architecture.data.source.repository.TokenRepository
 import com.google.gson.Gson
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
+import java.util.concurrent.TimeUnit
 import okhttp3.Cache
 import okhttp3.Interceptor
-import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -43,8 +43,7 @@ fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
 }
 
 fun provideOkHttpCache(app: Application): Cache {
-    val cacheSize: Long = 10 * 1024 * 1024 // 10 MiB
-    return Cache(app.cacheDir, cacheSize)
+    return Cache(app.cacheDir, NetworkConstants.OK_HTTP_SIZE_CACHE)
 }
 
 fun provideInterceptor(tokenRepository: TokenRepository): Interceptor {
@@ -83,4 +82,5 @@ object NetworkConstants {
     const val READ_TIMEOUT: Long = 30
     const val WRITE_TIMEOUT: Long = 30
     const val CONNECTION_TIMEOUT: Long = 30
+    const val OK_HTTP_SIZE_CACHE: Long = 10 * 1024 * 1024 // 10MB
 }

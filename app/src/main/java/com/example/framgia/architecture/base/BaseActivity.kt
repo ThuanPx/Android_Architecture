@@ -5,13 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.framgia.architecture.data.source.remote.error.RetrofitException
 import com.example.framgia.architecture.utils.widget.dialogManager.DialogAlert
 import com.example.framgia.architecture.utils.widget.dialogManager.DialogConfirm
+import com.example.framgia.architecture.utils.widget.dialogManager.DialogManager
 import com.example.framgia.architecture.utils.widget.dialogManager.DialogManagerImpl
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
-import mi.omiseno.smartphoneorder.utils.widget.dialogManager.DialogManager
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.net.HttpURLConnection
 import kotlin.reflect.KClass
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by ThuanPx on 1/28/19.

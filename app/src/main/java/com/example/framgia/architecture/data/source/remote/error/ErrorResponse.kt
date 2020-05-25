@@ -1,11 +1,11 @@
 package com.example.framgia.architecture.data.source.remote.error
 
 import com.example.framgia.architecture.utils.ktext.string.nullToEmpty
+import java.io.IOException
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Response
 import timber.log.Timber
-import java.io.IOException
 
 /**
  * Created by ThuanPx on 2/18/19.

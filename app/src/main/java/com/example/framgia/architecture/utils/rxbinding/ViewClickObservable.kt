@@ -6,6 +6,7 @@ package com.example.framgia.architecture.utils.rxbinding
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.annotation.CheckResult
+import com.example.framgia.architecture.Constants
 import io.reactivex.rxjava3.android.MainThreadDisposable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit
  */
 @CheckResult
 fun View.clicks(): Observable<Unit> {
-    return ViewClickObservable(this).throttleFirst(1500, TimeUnit.MILLISECONDS)
+    return ViewClickObservable(this).throttleFirst(Constants.DELAY_CLICK_BUTTON, TimeUnit.MILLISECONDS)
 }
 
 private class ViewClickObservable(

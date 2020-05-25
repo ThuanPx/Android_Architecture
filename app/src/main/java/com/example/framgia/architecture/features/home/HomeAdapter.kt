@@ -33,7 +33,8 @@ class HomeAdapter : BaseRecyclerViewAdapter<User, HomeAdapter.Companion.ItemView
     }
 
     companion object {
-        class ItemViewHolder(view: View, private val itemClickListener: ((User?, Int?) -> Unit)?) : RecyclerView.ViewHolder(view) {
+        class ItemViewHolder(view: View,
+                             private val itemClickListener: ((User?, Int?) -> Unit)?) : RecyclerView.ViewHolder(view) {
             @SuppressLint("SetTextI18n")
             fun onBind(user: User?, pos: Int) {
                 with(itemView) {

@@ -1,3 +1,4 @@
+@file:Suppress("NestedBlockDepth")
 package com.example.framgia.architecture.data.source.remote.middleware
 
 import androidx.annotation.NonNull
@@ -36,8 +37,8 @@ class RxErrorHandlingCallAdapterFactory private constructor() : CallAdapter.Fact
         retrofit: Retrofit
     ): CallAdapter<*, *> {
         return RxCallAdapterWrapper(
-                returnType,
-                wrapped = original.get(returnType, annotations, retrofit) as CallAdapter<Any, Any>
+            returnType,
+            wrapped = original.get(returnType, annotations, retrofit) as CallAdapter<Any, Any>
         )
     }
 
@@ -54,55 +55,29 @@ class RxErrorHandlingCallAdapterFactory private constructor() : CallAdapter.Fact
         }
 
         override fun adapt(@NonNull call: Call<R>): Any {
-            val rawType = getRawType(returnType)
-
-            val isFlowable = rawType == Flowable::class.java
-            val isSingle = rawType == Single::class.java
-            val isMaybe = rawType == Maybe::class.java
-            val isCompletable = rawType == Completable::class.java
-
-            if (returnType !is ParameterizedType) {
-                val name = when {
-                    isFlowable -> "Flowable"
-                    isSingle -> "Single"
-                    isMaybe -> "Maybe"
-                    else -> "Observable"
-                }
-                throw IllegalStateException(
-                        name +
-                                " return type must be parameterized" +
-                                " as " +
-                                name +
-                                "<Foo> or " +
-                                name +
-                                "<? extends Foo>"
-                )
-            }
-
-            if (isFlowable) {
-                return (wrapped.adapt(
+            when (getRawType(returnType)) {
+                Flowable::class.java ->
+                    return (wrapped.adapt(
                         call) as Flowable<*>).onErrorResumeNext { throwable: Throwable ->
-                    Flowable.error(convertToBaseException(throwable))
-                }
-            }
-            if (isSingle) {
-                return (wrapped.adapt(call) as Single<*>).onErrorResumeNext { throwable ->
-                    Single.error(convertToBaseException(throwable))
-                }
-            }
-            if (isMaybe) {
-                return (wrapped.adapt(call) as Maybe<*>).onErrorResumeNext { throwable: Throwable ->
-                    Maybe.error(convertToBaseException(throwable))
-                }
-            }
-            if (isCompletable) {
-                return (wrapped.adapt(call) as Completable).onErrorResumeNext { throwable ->
-                    Completable.error(convertToBaseException(throwable))
-                }
-            }
-            return (wrapped.adapt(
-                    call) as Observable<*>).onErrorResumeNext { throwable: Throwable ->
-                Observable.error(convertToBaseException(throwable))
+                        Flowable.error(convertToBaseException(throwable))
+                    }
+                Single::class.java ->
+                    return (wrapped.adapt(call) as Single<*>).onErrorResumeNext { throwable ->
+                        Single.error(convertToBaseException(throwable))
+                    }
+                Maybe::class.java ->
+                    return (wrapped.adapt(call) as Maybe<*>).onErrorResumeNext { throwable: Throwable ->
+                        Maybe.error(convertToBaseException(throwable))
+                    }
+                Completable::class.java ->
+                    return (wrapped.adapt(call) as Completable).onErrorResumeNext { throwable ->
+                        Completable.error(convertToBaseException(throwable))
+                    }
+                else ->
+                    return (wrapped.adapt(
+                        call) as Observable<*>).onErrorResumeNext { throwable: Throwable ->
+                        Observable.error(convertToBaseException(throwable))
+                    }
             }
         }
 
